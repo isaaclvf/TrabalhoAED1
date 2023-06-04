@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+
 #include "lista.h"
-#include <csv.h>
 
 typedef struct filme {
   int id;
@@ -20,10 +20,10 @@ typedef struct filme {
   float imdb;
   float metascore;
   float rotten_tomates;
-  
+
 } Filme;
 
 int main(void) {
-
+  printf("oiii\n");
   return 0;
 }

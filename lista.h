@@ -1,3 +1,6 @@
+#ifndef lista_h
+#define lista_h
+
 #include "lista.c"
 
 // criar lista
@@ -18,3 +21,5 @@ void excluirLista(Lista *lista);
 void swap(No *a, No *b);
 No *particiona(No *inicio, No *fim, int (*compare)(void *, void *));
 void quicksort(No *inicio, No *fim, int (*compare)(void *, void *));
+
+#endif
