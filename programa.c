@@ -1,12 +1,11 @@
+#include <csv.h>
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
-#include <csv.h>
-#include "lista.h"
-#define Max_LEN 152
 
-typedef struct filme
-{
+#include "lista.h"
+
+typedef struct filme {
   int id;
   char *title;
   char *director;
@@ -25,21 +24,42 @@ typedef struct filme
 
 } Filme;
 
-int main(void)
-{
+/*
+ * IMPORTANTE:
+ * As funções de comparação devem retornar números inteiros seguindo essas
+ * regras (para ordenar em ordem crescente):
+ * - negativo se o primeiro elemento for menor,
+ * - zero se forem iguais,
+ * - e positivo se o primeiro elemento for maior.
+ **/
 
+int comparaImdb(Filme *a, Filme *b) {
+  if (a->imdb > b->imdb) {
+    return -1;
+  }
+
+  if (a->imdb < b->imdb) {
+    return 1;
+  }
+  return 0;
+}
+
+int comparaTitulo(Filme *a, Filme *b) { return strcmp(a->title, b->title); }
+
+int main(void) {
   FILE *file = fopen("filmes.csv", "r");
   char buffer[1024];
-  Filme a24[Max_LEN];
+  Lista *lista_filmes = criaLista();
 
   int i = 0;
   fgets(buffer, sizeof(buffer), file);
 
-  while (fgets(buffer, sizeof(buffer), file) != NULL)
-  {
+  while (fgets(buffer, sizeof(buffer), file) != NULL) {
     // dados dos filmes
 
-    char *id_str, *title, *director, *writers, *producer, *starring, *language, *country, *running_time_str, *budget_str, *box_office_str, *release_dates, *imdb_str, *metascore_str, *rotten_tomates_str;
+    char *id_str, *title, *director, *writers, *producer, *starring, *language,
+        *country, *running_time_str, *budget_str, *box_office_str,
+        *release_dates, *imdb_str, *metascore_str, *rotten_tomates_str;
 
     id_str = strtok(buffer, ",");
     title = strtok(NULL, ",");
@@ -68,40 +88,47 @@ int main(void)
 
     // alocando memoria
 
-    a24[i].title = malloc(sizeof(char) * (strlen(title) + 1));
-    a24[i].director = malloc(sizeof(char) * (strlen(director) + 1));
-    a24[i].writers = malloc(sizeof(char) * (strlen(writers) + 1));
-    a24[i].producer = malloc(sizeof(char) * (strlen(producer) + 1));
-    a24[i].starring = malloc(sizeof(char) * (strlen(starring) + 1));
-    a24[i].language = malloc(sizeof(char) * (strlen(language) + 1));
-    a24[i].country = malloc(sizeof(char) * (strlen(country) + 1));
-    a24[i].release_dates = malloc(sizeof(char) * (strlen(release_dates) + 1));
+    Filme *f = malloc(sizeof(Filme));
+    f->title = malloc(sizeof(char) * (strlen(title) + 1));
+    f->director = malloc(sizeof(char) * (strlen(director) + 1));
+    f->writers = malloc(sizeof(char) * (strlen(writers) + 1));
+    f->producer = malloc(sizeof(char) * (strlen(producer) + 1));
+    f->starring = malloc(sizeof(char) * (strlen(starring) + 1));
+    f->language = malloc(sizeof(char) * (strlen(language) + 1));
+    f->country = malloc(sizeof(char) * (strlen(country) + 1));
+    f->release_dates = malloc(sizeof(char) * (strlen(release_dates) + 1));
 
     // armazenando os dados no vetor
 
-    strcpy(a24[i].title, title);
-    strcpy(a24[i].director, director);
-    strcpy(a24[i].writers, writers);
-    strcpy(a24[i].producer, producer);
-    strcpy(a24[i].starring, starring);
-    strcpy(a24[i].language, language);
-    strcpy(a24[i].country, country);
-    strcpy(a24[i].release_dates, release_dates);
-    a24[i].id = id;
-    a24[i].running_time = running_time;
-    a24[i].box_office = box_office;
-    a24[i].budget = budget;
-    a24[i].imdb = imdb;
-    a24[i].metascore = metascore;
-    a24[i].rotten_tomates = rotten_tomates;
+    strcpy(f->title, title);
+    strcpy(f->director, director);
+    strcpy(f->writers, writers);
+    strcpy(f->producer, producer);
+    strcpy(f->starring, starring);
+    strcpy(f->language, language);
+    strcpy(f->country, country);
+    strcpy(f->release_dates, release_dates);
+    f->id = id;
+    f->running_time = running_time;
+    f->box_office = box_office;
+    f->budget = budget;
+    f->imdb = imdb;
+    f->metascore = metascore;
+    f->rotten_tomates = rotten_tomates;
 
-    /* inserir auqui a função de print */
+    inserirFim(lista_filmes, f);
 
-    // getchar();
     i++;
   }
   fclose(file);
 
-  printf("%f\n", a24[1].imdb);
+  // Ordena em ordem crescente por imdb antes de imprimir
+  quicksort(lista_filmes->inicio, lista_filmes->fim, comparaTitulo);
+
+  for (No *i = lista_filmes->inicio; i->prox != NULL; i = i->prox) {
+    Filme *f = (Filme *)i->dados;
+    printf("%s \t %.2f\n", f->title, f->imdb);
+  }
+
   return 0;
 }

@@ -1,4 +1,5 @@
 #include "lista.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -17,8 +18,7 @@ typedef struct lista {
 // criaNo
 No *criaNo(void *elemento) {
   No *no = malloc(sizeof(No));
-  if (no == NULL)
-    return NULL;
+  if (no == NULL) return NULL;
 
   no->dados = elemento;
   no->anterior = NULL;
@@ -30,8 +30,7 @@ No *criaNo(void *elemento) {
 // criaLista
 Lista *criaLista() {
   Lista *li = malloc(sizeof(Lista));
-  if (li == NULL)
-    return NULL;
+  if (li == NULL) return NULL;
 
   li->inicio = NULL;
   li->fim = NULL;
@@ -63,8 +62,7 @@ void inserirInicio(Lista *lista, void *elemento) {
 void *removerInicio(Lista *lista) {
   void *elementoRemovido = NULL;
 
-  if (vazia(lista))
-    return elementoRemovido;
+  if (vazia(lista)) return elementoRemovido;
 
   if (lista->tam == 1) {
     elementoRemovido = lista->inicio->dados;
@@ -106,8 +104,7 @@ void inserirFim(Lista *lista, void *elemento) {
 void *removerFim(Lista *lista) {
   void *elementoRemovido = NULL;
 
-  if (vazia(lista))
-    return elementoRemovido;
+  if (vazia(lista)) return elementoRemovido;
 
   if (lista->tam == 1) {
     elementoRemovido = lista->fim->dados;
@@ -145,14 +142,6 @@ void excluirLista(Lista *lista) {
 
 // Ordenação
 
-/*
-* IMPORTANTE: 
-* As funções de comparação devem retornar números inteiros seguindo essas regras:
-* - negativo se o primeiro elemento for menor, 
-* - zero se forem iguais, 
-* - e positivo se o primeiro elemento for maior.
-**/
-
 void swap(No *a, No *b) {
   void *t = a->dados;
   a->dados = b->dados;
@@ -177,7 +166,7 @@ No *particiona(No *inicio, No *fim, int (*compare)(void *, void *)) {
 
 void quicksort(No *inicio, No *fim, int (*compare)(void *, void *)) {
   if (fim != NULL && inicio != fim && inicio != fim->prox) {
-    No * pivo = particiona(inicio, fim, compare);
+    No *pivo = particiona(inicio, fim, compare);
     quicksort(inicio, pivo->anterior, compare);
     quicksort(pivo->prox, fim, compare);
   }
