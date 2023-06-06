@@ -21,7 +21,6 @@ typedef struct filme {
   float imdb;
   float metascore;
   float rotten_tomates;
-
 } Filme;
 
 /*
@@ -46,6 +45,41 @@ int comparaImdb(Filme *a, Filme *b) {
 
 int comparaTitulo(Filme *a, Filme *b) { return strcmp(a->title, b->title); }
 
+Filme *criaFilme(int id, char *title, char *director, char *writers,
+                 char *producer, char *starring, char *country, char *language,
+                 int running_time, float budget, float box_office,
+                 char *release_dates, float imdb, float metascore,
+                 float rotten_tomates) {
+  Filme *f = malloc(sizeof(Filme));
+
+  f->title = malloc(sizeof(char) * (strlen(title) + 1));
+  f->director = malloc(sizeof(char) * (strlen(director) + 1));
+  f->writers = malloc(sizeof(char) * (strlen(writers) + 1));
+  f->producer = malloc(sizeof(char) * (strlen(producer) + 1));
+  f->starring = malloc(sizeof(char) * (strlen(starring) + 1));
+  f->language = malloc(sizeof(char) * (strlen(language) + 1));
+  f->country = malloc(sizeof(char) * (strlen(country) + 1));
+  f->release_dates = malloc(sizeof(char) * (strlen(release_dates) + 1));
+
+  strcpy(f->title, title);
+  strcpy(f->director, director);
+  strcpy(f->writers, writers);
+  strcpy(f->producer, producer);
+  strcpy(f->starring, starring);
+  strcpy(f->language, language);
+  strcpy(f->country, country);
+  strcpy(f->release_dates, release_dates);
+  f->id = id;
+  f->running_time = running_time;
+  f->box_office = box_office;
+  f->budget = budget;
+  f->imdb = imdb;
+  f->metascore = metascore;
+  f->rotten_tomates = rotten_tomates;
+
+  return f;
+}
+
 int main(void) {
   FILE *file = fopen("filmes.csv", "r");
   char buffer[1024];
@@ -56,7 +90,6 @@ int main(void) {
 
   while (fgets(buffer, sizeof(buffer), file) != NULL) {
     // dados dos filmes
-
     char *id_str, *title, *director, *writers, *producer, *starring, *language,
         *country, *running_time_str, *budget_str, *box_office_str,
         *release_dates, *imdb_str, *metascore_str, *rotten_tomates_str;
@@ -86,40 +119,15 @@ int main(void) {
     float metascore = atof(metascore_str);
     float rotten_tomates = atof(rotten_tomates_str);
 
-    // alocando memoria
-
-    Filme *f = malloc(sizeof(Filme));
-    f->title = malloc(sizeof(char) * (strlen(title) + 1));
-    f->director = malloc(sizeof(char) * (strlen(director) + 1));
-    f->writers = malloc(sizeof(char) * (strlen(writers) + 1));
-    f->producer = malloc(sizeof(char) * (strlen(producer) + 1));
-    f->starring = malloc(sizeof(char) * (strlen(starring) + 1));
-    f->language = malloc(sizeof(char) * (strlen(language) + 1));
-    f->country = malloc(sizeof(char) * (strlen(country) + 1));
-    f->release_dates = malloc(sizeof(char) * (strlen(release_dates) + 1));
-
-    // armazenando os dados no vetor
-
-    strcpy(f->title, title);
-    strcpy(f->director, director);
-    strcpy(f->writers, writers);
-    strcpy(f->producer, producer);
-    strcpy(f->starring, starring);
-    strcpy(f->language, language);
-    strcpy(f->country, country);
-    strcpy(f->release_dates, release_dates);
-    f->id = id;
-    f->running_time = running_time;
-    f->box_office = box_office;
-    f->budget = budget;
-    f->imdb = imdb;
-    f->metascore = metascore;
-    f->rotten_tomates = rotten_tomates;
+    Filme *f = criaFilme(id, title, director, writers, producer, starring,
+                         country, language, running_time, budget, box_office,
+                         release_dates, imdb, metascore, rotten_tomates);
 
     inserirFim(lista_filmes, f);
 
     i++;
   }
+
   fclose(file);
 
   // Ordena em ordem crescente por imdb antes de imprimir
