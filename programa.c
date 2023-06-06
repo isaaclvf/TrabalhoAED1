@@ -45,7 +45,66 @@ int comparaImdb(Filme *a, Filme *b) {
   return 0;
 }
 
+int comparaMetascore(Filme *a, Filme *b) {
+  if (a->metascore > b->metascore) {
+    return -1;
+  }
+
+  if (a->metascore < b->metascore) {
+    return 1;
+  }
+  return 0;
+}
+
+int comparaRotten(Filme *a, Filme *b) {
+  if (a->rotten_tomates > b->rotten_tomates) {
+    return -1;
+  }
+
+  if (a->rotten_tomates < b->rotten_tomates) {
+    return 1;
+  }
+  return 0;
+}
+
 int comparaTitulo(Filme *a, Filme *b) { return strcmp(a->title, b->title); }
+
+int comparaDiretor(Filme *a, Filme *b) {
+  return strcmp(a->director, b->director);
+}
+
+int comparaDataLancamento(Filme *a, Filme *b) {
+  // Filmes mais antigos no início
+  int ano1, mes1, dia1;
+  sscanf(a->release_dates, "%d-%d-%d", &ano1, &mes1, &dia1);
+
+  int ano2, mes2, dia2;
+  sscanf(b->release_dates, "%d-%d-%d", &ano2, &mes2, &dia2);
+
+  // Compara anos
+  if (ano1 > ano2) {
+    return 1;
+  } else if (ano1 < ano2) {
+    return -1;
+  }
+
+  // Se for do mesmo ano, compara meses
+  if (mes1 > mes2) {
+    return 1;
+  } else if (mes1 < mes2) {
+    return -1;
+  }
+
+  // Se for do mesmo mês, compara dias
+  if (dia1 > dia2) {
+    return 1;
+  } else if (dia1 < dia2) {
+    return -1;
+  }
+
+  // Datas iguais
+  return 0;
+}
 
 /**
  * Funções auxiliares
@@ -141,12 +200,12 @@ Lista *leFilmesCsv(char *path) {
 int main(void) {
   Lista *lista_filmes = leFilmesCsv("filmes.csv");
 
-  // Ordena em ordem crescente por imdb antes de imprimir
+  // Ordena em ordem alfabetica antes de imprimir
   quicksort(lista_filmes->inicio, lista_filmes->fim, comparaTitulo);
 
   for (No *i = lista_filmes->inicio; i->prox != NULL; i = i->prox) {
     Filme *f = (Filme *)i->dados;
-    printf("%s \t %.2f\n", f->title, f->imdb);
+    printf("%s %.2f\n", f->title, f->imdb);
   }
 
   return 0;
