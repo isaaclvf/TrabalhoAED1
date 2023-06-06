@@ -23,14 +23,16 @@ typedef struct filme {
   float rotten_tomates;
 } Filme;
 
-/*
+/**
+ * Funções para ordenação
+ *
  * IMPORTANTE:
  * As funções de comparação devem retornar números inteiros seguindo essas
  * regras (para ordenar em ordem crescente):
  * - negativo se o primeiro elemento for menor,
  * - zero se forem iguais,
- * - e positivo se o primeiro elemento for maior.
- **/
+ * - positivo se o primeiro elemento for maior.
+ */
 
 int comparaImdb(Filme *a, Filme *b) {
   if (a->imdb > b->imdb) {
@@ -45,6 +47,9 @@ int comparaImdb(Filme *a, Filme *b) {
 
 int comparaTitulo(Filme *a, Filme *b) { return strcmp(a->title, b->title); }
 
+/**
+ * Funções auxiliares
+ */
 Filme *criaFilme(int id, char *title, char *director, char *writers,
                  char *producer, char *starring, char *country, char *language,
                  int running_time, float budget, float box_office,
@@ -80,8 +85,8 @@ Filme *criaFilme(int id, char *title, char *director, char *writers,
   return f;
 }
 
-int main(void) {
-  FILE *file = fopen("filmes.csv", "r");
+Lista *leFilmesCsv(char *path) {
+  FILE *file = fopen(path, "r");
   char buffer[1024];
   Lista *lista_filmes = criaLista();
 
@@ -129,6 +134,12 @@ int main(void) {
   }
 
   fclose(file);
+
+  return lista_filmes;
+}
+
+int main(void) {
+  Lista *lista_filmes = leFilmesCsv("filmes.csv");
 
   // Ordena em ordem crescente por imdb antes de imprimir
   quicksort(lista_filmes->inicio, lista_filmes->fim, comparaTitulo);
